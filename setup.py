@@ -25,7 +25,7 @@ for dirpath, dirnames, filenames in os.walk('compress'):
 
 setup(
     name='django-compress',
-    version='1.0.1',
+    version='1.0.1x',
     description='django-compress provides an automated system for compressing CSS and JavaScript files',
     author='Andreas Pelme',
     author_email='Andreas Pelme <andreas@pelme.se>',

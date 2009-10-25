@@ -109,7 +109,7 @@ def get_version_from_file(path, filename):
             return result.groups()[0]
 
 def remove_files(path, filename, verbosity=0):    
-    regex = re.compile(r'^%s$' % (os.path.basename(get_output_filename(settings.COMPRESS_VERSION_PLACEHOLDER.join([re.escape(part) for part in filename.split(settings.COMPRESS_VERSION_PLACEHOLDER)]), r'[A-Za-z0-9]+'))))
+    regex = re.compile(r'^%s$' % (get_output_filename(settings.COMPRESS_VERSION_PLACEHOLDER.join([re.escape(part) for part in os.path.basename(filename).split(settings.COMPRESS_VERSION_PLACEHOLDER)]), r'[A-Za-z0-9]+')))
     if os.path.exists(path):
         for f in os.listdir(path):
             if regex.match(f):
