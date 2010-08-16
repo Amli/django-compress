@@ -29,7 +29,11 @@ def render_common(obj, filename, version):
         context['url'] = filename
     else:
         context['url'] = compress_url(filename, prefix)
-        
+
+    if not settings.COMPRESS:
+        # append querystring version when not compressing files
+        context['url'] = '%s?%s' % (context['url'], get_version([filename]))
+
     return obj['template'].render(context)
 
 def render_css(css, filename, version=None):
@@ -55,7 +59,7 @@ class CompressedCSSNode(template.Node):
             version = None
 
             if settings.COMPRESS_AUTO:
-                u, version = needs_update(css['output_filename'], 
+                u, version = needs_update(css['output_filename'],
                     css['source_filenames'])
                 if u:
                     filter_css(css)
@@ -63,7 +67,7 @@ class CompressedCSSNode(template.Node):
                 filename_base, filename = os.path.split(css['output_filename'])
                 path_name = compress_root(filename_base)
                 version = get_version_from_file(path_name, filename)
-                
+
             return render_css(css, css['output_filename'], version)
         else:
             # output source files
@@ -84,23 +88,23 @@ class CompressedJSNode(template.Node):
             js = settings.COMPRESS_JS[js_name]
         except KeyError:
             return '' # fail silently, do not return anything if an invalid group is specified
-        
+
         if 'external_urls' in js:
             r = ''
             for url in js['external_urls']:
                 r += render_js(js, url)
             return r
-                    
+
         if settings.COMPRESS:
 
             version = None
 
             if settings.COMPRESS_AUTO:
-                u, version = needs_update(js['output_filename'], 
+                u, version = needs_update(js['output_filename'],
                     js['source_filenames'])
                 if u:
                     filter_js(js)
-            elif not js.get('extra_context', {}).get('prefix', None): 
+            elif not js.get('extra_context', {}).get('prefix', None):
                 filename_base, filename = os.path.split(js['output_filename'])
                 path_name = compress_root(filename_base)
                 version = get_version_from_file(path_name, filename)
