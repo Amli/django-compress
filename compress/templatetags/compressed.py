@@ -46,8 +46,11 @@ class CompressedCSSNode(template.Node):
     def __init__(self, name):
         self.name = name
 
+    def resolve_name(self, context):
+        return template.Variable(self.name).resolve(context)
+
     def render(self, context):
-        css_name = template.Variable(self.name).resolve(context)
+        css_name = self.resolve_name(context)
 
         try:
             css = settings.COMPRESS_CSS[css_name]
@@ -81,8 +84,11 @@ class CompressedJSNode(template.Node):
     def __init__(self, name):
         self.name = name
 
+    def resolve_name(self, context):
+        return template.Variable(self.name).resolve(context)
+
     def render(self, context):
-        js_name = template.Variable(self.name).resolve(context)
+        js_name = self.resolve_name(context)
 
         try:
             js = settings.COMPRESS_JS[js_name]
